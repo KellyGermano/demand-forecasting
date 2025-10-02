@@ -1,0 +1,71 @@
+{
+  "current_model": "model-20251002_223108",
+  "models": {
+    "model-20251002_155118": {
+      "created_at": "2025-10-02T15:51:19.186977",
+      "metrics": {
+        "mae": 5.490058916063887,
+        "rmse": 6.833334991826516,
+        "mape": 4.729955423672049,
+        "smape": 4.754366882683807
+      },
+      "model_type": "RandomForest",
+      "path": "models/production/model-20251002_155118.joblib"
+    },
+    "model-20251002_214913": {
+      "created_at": "2025-10-02T21:49:14.708267",
+      "metrics": {
+        "mae": 5.49005891606389,
+        "rmse": 6.833334991826519,
+        "mape": 4.729955423672053,
+        "smape": 4.754366882683811
+      },
+      "model_type": "RandomForest",
+      "path": "models/production/model-20251002_214913.joblib"
+    },
+    "model-20251002_221102": {
+      "created_at": "2025-10-02T22:11:03.023355",
+      "metrics": {
+        "mae": 5.525026656606049,
+        "rmse": 6.949625216759373,
+        "mape": 4.74162265596829,
+        "smape": 4.759043697959951
+      },
+      "model_type": "RandomForest",
+      "path": "models/production/model-20251002_221102.joblib"
+    },
+    "model-20251002_221314": {
+      "created_at": "2025-10-02T22:13:15.394102",
+      "metrics": {
+        "mae": 5.52502665660605,
+        "rmse": 6.949625216759373,
+        "mape": 4.741622655968291,
+        "smape": 4.759043697959951
+      },
+      "model_type": "RandomForest",
+      "path": "models/production/model-20251002_221314.joblib"
+    },
+    "model-20251002_222059": {
+      "created_at": "2025-10-02T22:21:00.721967",
+      "metrics": {
+        "mae": 5.525026656606049,
+        "rmse": 6.949625216759373,
+        "mape": 4.741622655968291,
+        "smape": 4.759043697959951
+      },
+      "model_type": "RandomForest",
+      "path": "models/production/model-20251002_222059.joblib"
+    },
+    "model-20251002_223108": {
+      "created_at": "2025-10-02T22:31:09.415210",
+      "metrics": {
+        "mae": 5.52502665660605,
+        "rmse": 6.949625216759373,
+        "mape": 4.741622655968291,
+        "smape": 4.759043697959952
+      },
+      "model_type": "RandomForest",
+      "path": "models/production/model-20251002_223108.joblib"
+    }
+  }
+}
