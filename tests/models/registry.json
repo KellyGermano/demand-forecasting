@@ -1,0 +1,16 @@
+{
+  "current_model": "model-20251003_003125",
+  "models": {
+    "model-20251003_003125": {
+      "created_at": "2025-10-03T00:31:25.990364",
+      "metrics": {
+        "mae": 5.525026656606049,
+        "rmse": 6.949625216759372,
+        "mape": 4.741622655968291,
+        "smape": 4.759043697959951
+      },
+      "model_type": "RandomForest",
+      "path": "models/production/model-20251003_003125.joblib"
+    }
+  }
+}
