@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ad2ed519-867a-4cc5-8605-e7dc217e7057" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MODEL_CARD.md" beforeDir="false" afterPath="$PROJECT_DIR$/MODEL_CARD.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/01_exploratory_analysis.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/01_exploratory_analysis.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -321,8 +321,10 @@ Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE) para detalles.
 
 **Tu Nombre**
 
-- GitHub: [@YOUR_USERNAME](https://github.com/YOUR_USERNAME)
-- LinkedIn: [Tu Perfil](https://linkedin.com/in/your-profile)
+- GitHub: [@KellyGermano](https://github.com/KellyGermano)
+- LinkedIn: [in/kellygermano](https://www.linkedin.com/in/kellygermano)
+- Portfolio: [kellygermano.com](https://kellygermano.com)
+- Email: [jobs@kellygermano.com](mailto:jobs@kellygermano.com)
 
 ---
 
