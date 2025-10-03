@@ -20,13 +20,9 @@ def generate_synthetic_demand(
 
     trend = base_demand + trend_slope * np.arange(periods)
 
-    weekly_seasonality = weekly_amplitude * np.sin(
-        2 * np.pi * np.arange(periods) / 7
-    )
+    weekly_seasonality = weekly_amplitude * np.sin(2 * np.pi * np.arange(periods) / 7)
 
-    yearly_seasonality = yearly_amplitude * np.sin(
-        2 * np.pi * np.arange(periods) / 365.25
-    )
+    yearly_seasonality = yearly_amplitude * np.sin(2 * np.pi * np.arange(periods) / 365.25)
 
     noise = np.random.normal(0, noise_level, periods)
 

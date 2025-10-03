@@ -19,9 +19,7 @@ class DemandPredictor:
     def _load_current_model(self) -> None:
         model_info = self.registry.get_current_model()
         if model_info is None:
-            raise ValueError(
-                "No trained model found in registry. Please train a model first."
-            )
+            raise ValueError("No trained model found in registry. Please train a model first.")
 
         model_path = Path(model_info["path"])
         if not model_path.exists():
@@ -31,9 +29,7 @@ class DemandPredictor:
         self.model_info = model_info
         print(f"Loaded model: {self.registry.registry['current_model']}")
 
-    def predict_future(
-        self, historical_data: pd.DataFrame, horizon: int = 7
-    ) -> np.ndarray:
+    def predict_future(self, historical_data: pd.DataFrame, horizon: int = 7) -> np.ndarray:
         if self.model is None:
             raise ValueError("Model not loaded")
 
@@ -97,9 +93,7 @@ def predict_demand(
 if __name__ == "__main__":
     print("Testing inference system...\n")
 
-    result = predict_demand(
-        historical_data_path="data/raw/demand_data.csv", horizon=14
-    )
+    result = predict_demand(historical_data_path="data/raw/demand_data.csv", horizon=14)
 
     print(f"Forecast horizon: {result['horizon']} days")
     print(f"Model type: {result['model_type']}")

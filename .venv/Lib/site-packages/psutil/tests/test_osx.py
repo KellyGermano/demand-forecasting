@@ -42,13 +42,13 @@ def sysctl(cmdline):
 
 def vm_stat(field):
     """Wrapper around 'vm_stat' cmdline utility."""
-    out = sh('vm_stat')
-    for line in out.split('\n'):
+    out = sh("vm_stat")
+    for line in out.split("\n"):
         if field in line:
             break
     else:
         raise ValueError("line not found")
-    return int(re.search(r'\d+', line).group(0)) * getpagesize()
+    return int(re.search(r"\d+", line).group(0)) * getpagesize()
 
 
 @pytest.mark.skipif(not MACOS, reason="MACOS only")
@@ -63,13 +63,11 @@ class TestProcess(PsutilTestCase):
 
     def test_process_create_time(self):
         output = sh(f"ps -o lstart -p {self.pid}")
-        start_ps = output.replace('STARTED', '').strip()
-        hhmmss = start_ps.split(' ')[-2]
-        year = start_ps.split(' ')[-1]
+        start_ps = output.replace("STARTED", "").strip()
+        hhmmss = start_ps.split(" ")[-2]
+        year = start_ps.split(" ")[-1]
         start_psutil = psutil.Process(self.pid).create_time()
-        assert hhmmss == time.strftime(
-            "%H:%M:%S", time.localtime(start_psutil)
-        )
+        assert hhmmss == time.strftime("%H:%M:%S", time.localtime(start_psutil))
         assert year == time.strftime("%Y", time.localtime(start_psutil))
 
 
@@ -84,12 +82,12 @@ class TestSystemAPIs(PsutilTestCase):
         # against "df -a"
         def df(path):
             out = sh(f'df -k "{path}"').strip()
-            lines = out.split('\n')
+            lines = out.split("\n")
             lines.pop(0)
             line = lines.pop(0)
             dev, total, used, free = line.split()[:4]
-            if dev == 'none':
-                dev = ''
+            if dev == "none":
+                dev = ""
             total = int(total) * 1024
             used = int(used) * 1024
             free = int(free) * 1024
@@ -124,7 +122,7 @@ class TestSystemAPIs(PsutilTestCase):
     # --- virtual mem
 
     def test_vmem_total(self):
-        sysctl_hwphymem = sysctl('sysctl hw.memsize')
+        sysctl_hwphymem = sysctl("sysctl hw.memsize")
         assert sysctl_hwphymem == psutil.virtual_memory().total
 
     @pytest.mark.skipif(
@@ -182,8 +180,8 @@ class TestSystemAPIs(PsutilTestCase):
             except RuntimeError:
                 pass
             else:
-                assert stats.isup == ('RUNNING' in out), out
-                assert stats.mtu == int(re.findall(r'mtu (\d+)', out)[0])
+                assert stats.isup == ("RUNNING" in out), out
+                assert stats.mtu == int(re.findall(r"mtu (\d+)", out)[0])
 
     # --- sensors_battery
 
@@ -200,7 +198,7 @@ class TestSystemAPIs(PsutilTestCase):
     # --- others
 
     def test_boot_time(self):
-        out = sh('sysctl kern.boottime')
+        out = sh("sysctl kern.boottime")
         a = float(re.search(r"sec\s*=\s*(\d+)", out).groups(0)[0])
         b = psutil.boot_time()
         assert a == b

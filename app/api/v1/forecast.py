@@ -37,7 +37,7 @@ async def get_forecast(
         ge=1,
         le=settings.max_forecast_horizon,
         description=f"Number of days to forecast (1-{settings.max_forecast_horizon})",
-    )
+    ),
 ):
     try:
         result = predict_demand(
@@ -72,9 +72,7 @@ async def get_current_model():
         model_info = registry.get_current_model()
 
         if model_info is None:
-            raise HTTPException(
-                status_code=404, detail="No model currently deployed"
-            )
+            raise HTTPException(status_code=404, detail="No model currently deployed")
 
         return {
             "model_id": registry.registry["current_model"],
@@ -100,9 +98,7 @@ async def get_metrics():
         model_info = registry.get_current_model()
 
         if model_info is None:
-            raise HTTPException(
-                status_code=404, detail="No model currently deployed"
-            )
+            raise HTTPException(status_code=404, detail="No model currently deployed")
 
         return {
             "model_id": registry.registry["current_model"],

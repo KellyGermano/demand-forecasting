@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional, Tuple
 
 from src.forecasting.data import generate_synthetic_demand, load_data, save_data
 from src.forecasting.evaluate import (
@@ -15,12 +15,21 @@ from src.forecasting.models import DemandForecaster
 
 
 class ModelRegistry:
+    """Manages model versions and metadata in a JSON registry file."""
+
     def __init__(self, registry_path: str | Path = "models/registry.json"):
+        """
+        Initializes the ModelRegistry.
+
+        Args:
+            registry_path (str | Path): Path to the JSON registry file.
+        """
         self.registry_path = Path(registry_path)
         self.registry_path.parent.mkdir(parents=True, exist_ok=True)
         self._load_registry()
 
     def _load_registry(self) -> None:
+        """Loads the registry from the file, or creates a new one."""
         if self.registry_path.exists():
             with open(self.registry_path, "r") as f:
                 self.registry = json.load(f)
@@ -29,6 +38,7 @@ class ModelRegistry:
             self._save_registry()
 
     def _save_registry(self) -> None:
+        """Saves the current state of the registry to the JSON file."""
         with open(self.registry_path, "w") as f:
             json.dump(self.registry, f, indent=2)
 
@@ -36,9 +46,18 @@ class ModelRegistry:
         self,
         model_id: str,
         model_path: str,
-        metrics: dict,
+        metrics: Dict[str, float],
         model_type: str = "RandomForest",
     ) -> None:
+        """
+        Adds a new model and its metadata to the registry.
+
+        Args:
+            model_id (str): A unique identifier for the model.
+            model_path (str): The file path where the model is saved.
+            metrics (Dict[str, float]): The evaluation metrics of the model.
+            model_type (str): The type of the model (e.g., 'RandomForest').
+        """
         self.registry["models"][model_id] = {
             "created_at": datetime.now().isoformat(),
             "metrics": metrics,
@@ -47,14 +66,27 @@ class ModelRegistry:
         }
         self.registry["current_model"] = model_id
         self._save_registry()
-        print(f"Model {model_id} registered successfully")
+        print(f"Model {model_id} registered successfully.")
 
-    def get_current_model(self) -> Optional[dict]:
-        if self.registry["current_model"] is None:
+    def get_current_model(self) -> Optional[Dict[str, Any]]:
+        """
+        Retrieves metadata for the currently active model.
+
+        Returns:
+            Optional[Dict[str, Any]]: A dictionary with the model's metadata, or None.
+        """
+        current_model_id = self.registry.get("current_model")
+        if current_model_id is None:
             return None
-        return self.registry["models"].get(self.registry["current_model"])
+        return self.registry["models"].get(current_model_id)
 
-    def get_all_models(self) -> dict:
+    def get_all_models(self) -> Dict[str, Any]:
+        """
+        Retrieves all models from the registry.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing all registered models.
+        """
         return self.registry["models"]
 
 
@@ -64,11 +96,29 @@ def train_demand_forecasting_model(
     n_estimators: int = 100,
     max_depth: int = 20,
     random_state: int = 42,
-) -> tuple[DemandForecaster, dict, str]:
+) -> Tuple[DemandForecaster, Dict[str, float], str]:
+    """
+    Executes the full model training pipeline.
+
+    This includes data loading/generation, feature engineering, model training,
+    evaluation, and registration.
+
+    Args:
+        data_path (Optional[str]): Path to the data file. If None, synthetic data is generated.
+        test_size (float): The proportion of the dataset to include in the test split.
+        n_estimators (int): The number of trees for the RandomForest model.
+        max_depth (int): The maximum depth for the RandomForest model.
+        random_state (int): Seed for reproducibility.
+
+    Returns:
+        Tuple[DemandForecaster, Dict[str, float], str]: A tuple containing the trained model
+                                                        instance, its evaluation metrics, and its ID.
+    """
     print("\n" + "=" * 60)
     print("DEMAND FORECASTING MODEL TRAINING")
     print("=" * 60)
 
+    # 1. Load or Generate Data
     if data_path is None:
         print("\nGenerating synthetic data...")
         df = generate_synthetic_demand(periods=730, random_seed=random_state)
@@ -76,27 +126,26 @@ def train_demand_forecasting_model(
     else:
         print(f"\nLoading data from {data_path}...")
         df = load_data(data_path)
+    print(f"Loaded {len(df)} records.")
 
-    print(f"Loaded {len(df)} records")
-
+    # 2. Feature Engineering
     print("\nCreating features...")
     df = create_all_features(df)
     df = df.dropna()
-    print(f"After feature engineering and dropna: {len(df)} records")
+    print(f"After feature engineering and dropna: {len(df)} records.")
 
+    # 3. Data Splitting
     split_idx = int(len(df) * (1 - test_size))
     train_df = df.iloc[:split_idx]
     test_df = df.iloc[split_idx:]
-
     print(f"\nTrain set: {len(train_df)} records")
     print(f"Test set:  {len(test_df)} records")
 
     feature_cols = get_feature_columns()
-    X_train = train_df[feature_cols]
-    y_train = train_df["demand"]
-    X_test = test_df[feature_cols]
-    y_test = test_df["demand"]
+    X_train, y_train = train_df[feature_cols], train_df["demand"]
+    X_test, y_test = test_df[feature_cols], test_df["demand"]
 
+    # 4. Model Training
     print("\nTraining Random Forest model...")
     model = DemandForecaster(
         n_estimators=n_estimators, max_depth=max_depth, random_state=random_state
@@ -104,15 +153,16 @@ def train_demand_forecasting_model(
     model.fit(X_train, y_train)
     print("Training completed!")
 
+    # 5. Model Evaluation
     print("\nEvaluating on test set...")
     y_pred = model.predict(X_test)
-    metrics = calculate_metrics(y_test.values, y_pred)
+    metrics = calculate_metrics(y_test.to_numpy(), y_pred)
     print_metrics(metrics)
 
     print("\nTop 5 important features:")
-    feature_importance = model.get_feature_importance()
-    print(feature_importance.head().to_string(index=False))
+    print(model.get_feature_importance().head().to_string(index=False))
 
+    # 6. Model Saving and Registration
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     model_id = f"model-{timestamp}"
     model_path = f"models/production/{model_id}.joblib"
@@ -120,22 +170,20 @@ def train_demand_forecasting_model(
     print(f"\nSaving model to {model_path}...")
     model.save(model_path)
 
-    print("\nGenerating evaluation plots...")
-    plot_predictions(
-        y_test.values,
-        y_pred,
-        dates=test_df["date"],
-        save_path="reports/figures/predictions.png",
-    )
-    plot_residuals(
-        y_test.values, y_pred, save_path="reports/figures/residuals.png"
-    )
-
     print("\nRegistering model...")
     registry = ModelRegistry()
-    registry.register_model(
-        model_id=model_id, model_path=model_path, metrics=metrics, model_type="RandomForest"
+    registry.register_model(model_id=model_id, model_path=model_path, metrics=metrics)
+
+    # 7. Generate Evaluation Plots
+    print("\nGenerating evaluation plots...")
+    y_test_numpy = y_test.to_numpy()  # Use .to_numpy() for mypy compatibility
+    plot_predictions(
+        y_test_numpy,
+        y_pred,
+        dates=test_df.index,  # Pass the DataFrame index for dates
+        save_path="reports/figures/predictions.png",
     )
+    plot_residuals(y_test_numpy, y_pred, save_path="reports/figures/residuals.png")
 
     print("\n" + "=" * 60)
     print("TRAINING PIPELINE COMPLETED SUCCESSFULLY")

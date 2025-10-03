@@ -111,9 +111,7 @@ class TestAvailSystemAPIs(PsutilTestCase):
 
     @pytest.mark.skipif(MACOS and AARCH64, reason="skipped due to #1892")
     def test_cpu_freq(self):
-        assert hasattr(psutil, "cpu_freq") == (
-            LINUX or MACOS or WINDOWS or FREEBSD or OPENBSD
-        )
+        assert hasattr(psutil, "cpu_freq") == (LINUX or MACOS or WINDOWS or FREEBSD or OPENBSD)
 
     def test_sensors_temperatures(self):
         assert hasattr(psutil, "sensors_temperatures") == (LINUX or FREEBSD)
@@ -122,22 +120,13 @@ class TestAvailSystemAPIs(PsutilTestCase):
         assert hasattr(psutil, "sensors_fans") == LINUX
 
     def test_battery(self):
-        assert hasattr(psutil, "sensors_battery") == (
-            LINUX or WINDOWS or FREEBSD or MACOS
-        )
+        assert hasattr(psutil, "sensors_battery") == (LINUX or WINDOWS or FREEBSD or MACOS)
 
 
 class TestAvailProcessAPIs(PsutilTestCase):
     def test_environ(self):
         assert hasattr(psutil.Process, "environ") == (
-            LINUX
-            or MACOS
-            or WINDOWS
-            or AIX
-            or SUNOS
-            or FREEBSD
-            or OPENBSD
-            or NETBSD
+            LINUX or MACOS or WINDOWS or AIX or SUNOS or FREEBSD or OPENBSD or NETBSD
         )
 
     def test_uids(self):
@@ -170,14 +159,10 @@ class TestAvailProcessAPIs(PsutilTestCase):
         assert hasattr(psutil.Process, "num_handles") == WINDOWS
 
     def test_cpu_affinity(self):
-        assert hasattr(psutil.Process, "cpu_affinity") == (
-            LINUX or WINDOWS or FREEBSD
-        )
+        assert hasattr(psutil.Process, "cpu_affinity") == (LINUX or WINDOWS or FREEBSD)
 
     def test_cpu_num(self):
-        assert hasattr(psutil.Process, "cpu_num") == (
-            LINUX or FREEBSD or SUNOS
-        )
+        assert hasattr(psutil.Process, "cpu_num") == (LINUX or FREEBSD or SUNOS)
 
     def test_memory_maps(self):
         hasit = hasattr(psutil.Process, "memory_maps")
@@ -246,7 +231,7 @@ class TestSystemAPITypes(PsutilTestCase):
     @pytest.mark.skipif(SKIP_SYSCONS, reason="requires root")
     def test_net_connections(self):
         with create_sockets():
-            ret = psutil.net_connections('all')
+            ret = psutil.net_connections("all")
             assert len(ret) == len(set(ret))
             for conn in ret:
                 assert is_namedtuple(conn)

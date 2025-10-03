@@ -73,4 +73,5 @@ async def not_found_handler(request, exc):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

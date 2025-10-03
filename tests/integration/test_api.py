@@ -68,12 +68,7 @@ def test_forecast_with_default_horizon():
 def test_train_model_endpoint():
     response = client.post(
         "/api/v1/models/train",
-        json={
-            "test_size": 0.2,
-            "n_estimators": 10,
-            "max_depth": 10,
-            "random_state": 42
-        }
+        json={"test_size": 0.2, "n_estimators": 10, "max_depth": 10, "random_state": 42},
     )
 
     if response.status_code == 200:

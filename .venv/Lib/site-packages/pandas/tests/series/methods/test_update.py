@@ -40,9 +40,7 @@ class TestUpdate:
                 match="inplace method",
             ):
                 df["c"].update(Series(["foo"], index=[0]))
-            expected = DataFrame(
-                [[1, np.nan, "foo"], [3, 2.0, np.nan]], columns=["a", "b", "c"]
-            )
+            expected = DataFrame([[1, np.nan, "foo"], [3, 2.0, np.nan]], columns=["a", "b", "c"])
             expected["c"] = expected["c"].astype(object)
         tm.assert_frame_equal(df, expected)
 

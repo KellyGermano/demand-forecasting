@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,19 +8,32 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 
 def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
+    """Calculates regression metrics from true and predicted values."""
     mae = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
 
-    mape = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+    # Avoid division by zero for MAPE calculation
+    y_true_arr = np.asarray(y_true)
+    y_pred_arr = np.asarray(y_pred)
+    mask = y_true_arr != 0
 
-    smape = (
-        np.mean(2 * np.abs(y_pred - y_true) / (np.abs(y_true) + np.abs(y_pred))) * 100
+    if np.any(mask):
+        mape = float(
+            np.mean(np.abs((y_true_arr[mask] - y_pred_arr[mask]) / y_true_arr[mask])) * 100
+        )
+    else:
+        mape = 0.0
+
+    smape = float(
+        np.mean(2 * np.abs(y_pred_arr - y_true_arr) / (np.abs(y_true_arr) + np.abs(y_pred_arr)))
+        * 100
     )
 
     return {"mae": float(mae), "rmse": float(rmse), "mape": float(mape), "smape": float(smape)}
 
 
 def print_metrics(metrics: dict[str, float]) -> None:
+    """Prints the evaluation metrics in a formatted way."""
     print("\n" + "=" * 50)
     print("MODEL EVALUATION METRICS")
     print("=" * 50)
@@ -33,12 +47,13 @@ def print_metrics(metrics: dict[str, float]) -> None:
 def plot_predictions(
     y_true: np.ndarray,
     y_pred: np.ndarray,
-    dates: pd.Series = None,
-    save_path: str | Path = None,
+    dates: Optional[pd.Series | pd.Index] = None,
+    save_path: str | Path | None = None,
 ) -> None:
+    """Plots actual vs. predicted values."""
     plt.figure(figsize=(12, 6))
 
-    if dates is not None:
+    if dates is not None and not dates.empty:
         plt.plot(dates, y_true, label="Actual", color="blue", linewidth=2)
         plt.plot(dates, y_pred, label="Predicted", color="red", linewidth=2, alpha=0.7)
         plt.xlabel("Date")
@@ -63,12 +78,14 @@ def plot_predictions(
 
 
 def plot_residuals(
-    y_true: np.ndarray, y_pred: np.ndarray, save_path: str | Path = None
+    y_true: np.ndarray, y_pred: np.ndarray, save_path: str | Path | None = None
 ) -> None:
+    """Plots residual analysis graphs."""
     residuals = y_true - y_pred
 
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
+    # Residual Plot
     axes[0].scatter(y_pred, residuals, alpha=0.5)
     axes[0].axhline(y=0, color="r", linestyle="--")
     axes[0].set_xlabel("Predicted Values")
@@ -76,6 +93,7 @@ def plot_residuals(
     axes[0].set_title("Residual Plot")
     axes[0].grid(True, alpha=0.3)
 
+    # Residual Distribution
     axes[1].hist(residuals, bins=30, edgecolor="black")
     axes[1].set_xlabel("Residuals")
     axes[1].set_ylabel("Frequency")
@@ -95,11 +113,13 @@ def plot_residuals(
 
 if __name__ == "__main__":
     np.random.seed(42)
-    y_true = np.random.rand(100) * 100
-    y_pred = y_true + np.random.randn(100) * 5
+    y_true_data = np.random.rand(100) * 100
+    y_true_data[y_true_data < 1] = 1
+    y_pred_data = y_true_data + np.random.randn(100) * 5
 
-    metrics = calculate_metrics(y_true, y_pred)
-    print_metrics(metrics)
+    # Calculate and print metrics
+    model_metrics = calculate_metrics(y_true_data, y_pred_data)
+    print_metrics(model_metrics)
 
-    plot_predictions(y_true, y_pred, save_path="reports/figures/test_predictions.png")
-    plot_residuals(y_true, y_pred, save_path="reports/figures/test_residuals.png")
+    plot_predictions(y_true_data, y_pred_data, save_path="reports/figures/test_predictions.png")
+    plot_residuals(y_true_data, y_pred_data, save_path="reports/figures/test_residuals.png")

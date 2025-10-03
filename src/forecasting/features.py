@@ -15,12 +15,8 @@ def create_rolling_features(
 ) -> pd.DataFrame:
     df = df.copy()
     for window in windows:
-        df[f"rolling_mean_{window}"] = (
-            df[target_col].shift(1).rolling(window=window).mean()
-        )
-        df[f"rolling_std_{window}"] = (
-            df[target_col].shift(1).rolling(window=window).std()
-        )
+        df[f"rolling_mean_{window}"] = df[target_col].shift(1).rolling(window=window).mean()
+        df[f"rolling_std_{window}"] = df[target_col].shift(1).rolling(window=window).std()
     return df
 
 

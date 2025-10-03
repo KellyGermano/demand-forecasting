@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel, Field
 
@@ -26,12 +25,7 @@ class TrainingStartedResponse(BaseModel):
     message: str
 
 
-def train_model_task(
-    test_size: float,
-    n_estimators: int,
-    max_depth: int,
-    random_state: int
-):
+def train_model_task(test_size: float, n_estimators: int, max_depth: int, random_state: int):
     try:
         train_demand_forecasting_model(
             data_path=None,
@@ -70,10 +64,7 @@ async def train_model(request: TrainingRequest = TrainingRequest()):
         )
 
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Training failed: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Training failed: {str(e)}")
 
 
 @router.post(
@@ -83,8 +74,7 @@ async def train_model(request: TrainingRequest = TrainingRequest()):
     description="Starts training a new model in the background",
 )
 async def train_model_async(
-    background_tasks: BackgroundTasks,
-    request: TrainingRequest = TrainingRequest()
+    background_tasks: BackgroundTasks, request: TrainingRequest = TrainingRequest()
 ):
     background_tasks.add_task(
         train_model_task,
