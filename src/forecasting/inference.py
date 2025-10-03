@@ -1,10 +1,11 @@
-import pandas as pd
-import numpy as np
 from pathlib import Path
 from typing import Optional
 
-from src.forecasting.models import DemandForecaster
+import numpy as np
+import pandas as pd
+
 from src.forecasting.features import create_all_features, get_feature_columns
+from src.forecasting.models import DemandForecaster
 from src.forecasting.train import ModelRegistry
 
 
@@ -102,7 +103,7 @@ if __name__ == "__main__":
 
     print(f"Forecast horizon: {result['horizon']} days")
     print(f"Model type: {result['model_type']}")
-    print(f"\nModel metrics:")
+    print("\nModel metrics:")
     for metric, value in result["metrics"].items():
         print(f"  {metric}: {value:.2f}")
 

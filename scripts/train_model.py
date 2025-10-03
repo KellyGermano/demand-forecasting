@@ -10,7 +10,7 @@ def main():
     print("Starting model training...")
     try:
         model, metrics, model_id = train_demand_forecasting_model()
-        print(f"\n✓ Training successful!")
+        print("\n✓ Training successful!")
         print(f"✓ Model ID: {model_id}")
         print(f"✓ MAE: {metrics['mae']:.2f}")
         print(f"✓ MAPE: {metrics['mape']:.2f}%")

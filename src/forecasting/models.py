@@ -1,8 +1,9 @@
-from sklearn.ensemble import RandomForestRegressor
-import pandas as pd
-import numpy as np
-import joblib
 from pathlib import Path
+
+import joblib
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
 
 
 class DemandForecaster:

@@ -1,10 +1,10 @@
-import pytest
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
+import pytest
 
-from src.forecasting.models import DemandForecaster
 from src.forecasting.features import get_feature_columns
+from src.forecasting.models import DemandForecaster
 
 
 def test_model_initialization():

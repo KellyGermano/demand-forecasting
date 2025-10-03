@@ -1,6 +1,6 @@
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+
+from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel, Field
-from typing import Optional
 
 from src.forecasting.train import train_demand_forecasting_model
 

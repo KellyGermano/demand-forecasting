@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException, Query
-from pydantic import BaseModel, Field
 from typing import List
 
-from src.forecasting.inference import predict_demand
+from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel, Field
+
 from app.core.settings import settings
+from src.forecasting.inference import predict_demand
 
 router = APIRouter()
 

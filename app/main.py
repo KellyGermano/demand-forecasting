@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.core.settings import settings
 from app.api.v1 import forecast, training
+from app.core.settings import settings
 
 app = FastAPI(
     title=settings.app_name,

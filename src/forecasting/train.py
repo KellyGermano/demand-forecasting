@@ -1,18 +1,17 @@
-import pandas as pd
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 from typing import Optional
 
-from src.forecasting.data import generate_synthetic_demand, save_data, load_data
-from src.forecasting.features import create_all_features, get_feature_columns
-from src.forecasting.models import DemandForecaster
+from src.forecasting.data import generate_synthetic_demand, load_data, save_data
 from src.forecasting.evaluate import (
     calculate_metrics,
-    print_metrics,
     plot_predictions,
     plot_residuals,
+    print_metrics,
 )
+from src.forecasting.features import create_all_features, get_feature_columns
+from src.forecasting.models import DemandForecaster
 
 
 class ModelRegistry:
